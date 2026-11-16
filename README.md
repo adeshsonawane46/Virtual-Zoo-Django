@@ -1,85 +1,128 @@
-🦁 Virtual Zoo
+# 🦁 Virtual Zoo
 
-An interactive full-stack Virtual Zoo web application where users can explore animals, view detailed information, authenticate securely, and take AI-generated quizzes powered by Google Gemini. The application also provides AI-generated animal sounds using ElevenLabs.
+**Virtual Zoo** is an interactive full-stack web application designed to make wildlife education more accessible. Users can explore animal profiles, test their knowledge through AI-generated quizzes, listen to AI-generated animal sounds, and experience famous zoos through embedded 360-degree virtual tours.
 
-✨ Features
+This project was developed as part of **INT253 – Web Development in Python using Django**.
 
-🐾 Browse animals by category
+## ✨ Features
 
-🔎 Search animals
+### Animal Explorer
+- Browse animals across six categories: Mammal, Bird, Fish, Reptile, Amphibian, and Insect.
+- Search and explore animal profiles.
+- View scientific name, description, habitat, diet, size, lifespan, region, conservation status, and primary threats.
+- Fallback images when animal images cannot be loaded.
+- Static animal dataset fallback.
 
-📖 View detailed animal profiles
+### AI Quiz
+- Select a quiz category and animal.
+- Generate 10-question multiple-choice quizzes using Google Gemini API.
+- Four options, correct answers, and explanations.
+- Dynamic fallback quiz generation when Gemini is unavailable.
+- Save quiz scores for logged-in users.
+- Dashboard statistics and leaderboard.
 
-🌍 View habitat, diet, region, lifespan, and conservation status
+### 360-Degree Virtual Tour
+- Browse and search seven famous zoos:
+  - London Zoo
+  - Singapore Zoo
+  - Bronx Zoo
+  - San Diego Zoo
+  - Taronga Zoo Sydney
+  - Toronto Zoo
+  - Berlin Zoo
+- Embedded interactive 360-degree street-level walkthroughs.
+- Look around, navigate panorama points, zoom, and use full-screen mode.
 
-🔐 User registration and login
+### Authentication and Other Features
+- User registration and login.
+- JWT-based authentication.
+- Password hashing using bcrypt.
+- Forgot password and password reset.
+- User dashboard and leaderboard.
+- AI-generated animal sounds using ElevenLabs.
+- Responsive user interface.
 
-🔑 JWT-based authentication
+## 🛠️ Technology Stack
 
-📧 Forgot password and password reset
+### Frontend
+- React.js
+- Vite
+- React Router
+- Axios
+- Tailwind CSS
 
-🧠 AI-generated 10-question quizzes using Google Gemini
+### Backend
+- Python 3.12
+- Django 5.1
+- Django REST Framework
+- Django CORS Headers
+- PyJWT
+- bcrypt
 
-📝 Multiple-choice questions with explanations
+### Database
+- SQLite
+- Django ORM
 
-🎯 Quiz score tracking
+### APIs and Services
+- Google Gemini API – AI quiz generation.
+- ElevenLabs API – AI animal sound generation.
 
-🏆 Leaderboard
+## 🧩 My Contribution
 
-🔊 AI-generated animal sounds using ElevenLabs
+My individual contribution covered the **Quiz page and Virtual Tour page**, including frontend and backend development.
 
-🖼️ Animal image fallback handling
+### Quiz Page
+- Developed the category selection, animal selection, and quiz interfaces using React.js.
+- Implemented a 10-question multiple-choice quiz interface.
+- Integrated the frontend with Django REST API endpoints.
+- Developed Django views and URL routes for quiz generation and retrieval.
+- Integrated Google Gemini API through `gemini_service.py`.
+- Implemented dynamic fallback quiz generation.
+- Developed quiz score submission and leaderboard functionality.
+- Integrated JWT authentication for protected API requests.
+- Tested the complete quiz workflow.
 
-📱 Responsive user interface
+### Virtual Tour Page
+- Developed the Virtual Zoo Tours listing page.
+- Added seven famous zoos with images, descriptions, and Start Tour functionality.
+- Implemented zoo search functionality.
+- Developed the interactive 360-degree tour viewer.
+- Integrated embedded street-level views.
+- Supported panorama navigation, zoom, compass, and full-screen functionality.
+- Developed responsive layouts for different screen sizes.
 
-🗄️ SQLite database with Django ORM
+**Implementation Note:** The zoo list and tour links are defined in the React frontend. The project does not describe a dedicated Django REST endpoint for tour data.
 
-🔄 Dynamic fallback quiz generation when Gemini is unavailable
+## 🏗️ Application Architecture
 
-🛠️ Tech Stack
+The application follows a three-tier architecture:
 
-Frontend
+1. **React Frontend:** Handles the user interface and API requests using Axios.
+2. **Django Backend:** Handles REST APIs, authentication, quiz generation, and application logic.
+3. **SQLite Database:** Stores application data using Django ORM.
 
-React.js
+### AI Quiz Workflow
 
-Vite
+1. User selects a category and animal.
+2. React sends a request to the Django backend.
+3. Django communicates with Google Gemini.
+4. Gemini generates 10 multiple-choice questions.
+5. Backend validates the generated response.
+6. A fallback generator is used if Gemini is unavailable.
+7. User submits the quiz.
+8. Django saves the score and updates leaderboard data.
 
-React Router
+## 📁 Project Structure
 
-Axios
-
-Tailwind CSS
-
-Backend
-
-Python 3.12
-
-Django 5.1
-
-Django REST Framework
-
-Django CORS Headers
-
-PyJWT (JWT Authentication)
-
-bcrypt
-
-SQLite / Django ORM
-
-APIs & Services
-
-Google Gemini API — AI quiz generation
-
-ElevenLabs API — animal sound generation
-
-📁 Project Structure
-
-Virtual-Zoo/
+```text
+Virtual-Zoo-Django/
 │
 ├── backend/
 │   ├── api/
 │   │   ├── migrations/
-│   │   ├── management/commands/seed_animals.py
+│   │   ├── management/
+│   │   │   └── commands/
+│   │   │       └── seed_animals.py
 │   │   ├── models.py
 │   │   ├── views.py
 │   │   ├── urls.py
@@ -87,441 +130,276 @@ Virtual-Zoo/
 │   │   ├── gemini_service.py
 │   │   ├── sound_service.py
 │   │   └── tests.py
+│   │
 │   ├── zoo_project/
 │   │   ├── settings.py
 │   │   ├── urls.py
 │   │   ├── wsgi.py
 │   │   └── asgi.py
-│   ├── venv/
+│   │
 │   ├── animals_data.json
 │   ├── manage.py
 │   ├── requirements.txt
-│   └── .env
+│   └── .env.example
 │
 ├── frontend/
 │   ├── public/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
-│   │   ├── utils/
-│   │   └── ...
+│   │   └── utils/
 │   ├── package.json
-│   └── .env
+│   └── .env.example
 │
 └── README.md
+```
 
-The sound API and Gemini AI quiz generation are integrated into the Django backend API.
+## 🚀 Getting Started
 
-🚀 Getting Started
+### Prerequisites
 
-1. Clone the Repository
+- Python 3.12
+- Node.js and npm
+- Git
 
-git clone https://github.com/adeshsonawane46/virtual-zoo.git
-cd virtual-zoo
+### 1. Clone the Repository
 
-⚙️ Backend Setup (Django + venv)
+```bash
+git clone https://github.com/adeshsonawane46/Virtual-Zoo-Django.git
 
+cd Virtual-Zoo-Django
+```
+
+### 2. Backend Setup
+
+```bash
 cd backend
 
-# Create virtual environment (if not already created)
 python -m venv venv
+```
 
-# Activate virtual environment
-# Windows (PowerShell):
+Activate the virtual environment.
+
+**Windows PowerShell:**
+
+```powershell
 .\venv\Scripts\Activate.ps1
-# Windows (Command Prompt):
+```
+
+**Windows Command Prompt:**
+
+```bat
 venv\Scripts\activate.bat
-# Linux/macOS:
+```
+
+**Linux/macOS:**
+
+```bash
 source venv/bin/activate
+```
 
-# Install dependencies
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-# Run migrations
+Create a `.env` file inside the backend directory:
+
+```env
+SECRET_KEY=your_django_secret_key
+DEBUG=True
+PORT=5001
+JWT_SECRET=your_jwt_secret
+GEMINI_API_KEY=your_gemini_api_key
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
+FRONTEND_URL=http://localhost:5173
+```
+
+Apply migrations:
+
+```bash
 python manage.py migrate
+```
 
-# Seed animals dataset (126 animals)
+Load animal dataset:
+
+```bash
 python manage.py seed_animals
+```
 
-# Start Django development server on port 5001
+Start Django server:
+
+```bash
 python manage.py runserver 5001
+```
 
-Backend:
+Backend URL:
+
+```text
 http://localhost:5001
+```
 
-> Alternatively, to run directly from the project root:
-> ```powershell
-> .\venv\Scripts\Activate.ps1
-> python backend\manage.py runserver 5001
-> ```
-
-🎨 Frontend Setup
+### 3. Frontend Setup
 
 Open another terminal:
 
+```bash
 cd frontend
+
 npm install
+```
 
-Create a .env file:
+Create a `.env` file:
 
+```env
 VITE_API_URL=http://localhost:5001
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```
 
 Start the frontend:
 
+```bash
 npm run dev
+```
 
-Frontend:
+Frontend URL:
 
+```text
 http://localhost:5173
+```
 
-🧠 AI Quiz System
+## 📡 API Endpoints
 
-The application uses the Google Gemini API to dynamically generate educational 10-question multiple-choice quizzes based on the selected animal.
-
-Example:
-
-GET /api/quiz/generate-gemini?animal=Lion&category=MAMMAL
-
-Each generated question contains:
-
-Question
-
-Four options
-
-Correct answer
-
-Explanation
-
-If the Gemini API is unavailable, the backend uses a dynamic fallback quiz generator.
-
-🔊 AI Animal Sound Generation
-
-Animal sounds are generated using the ElevenLabs Sound Effects API.
-
-The sound route is part of the main Django backend:
-
-POST /api/sound
-
-Example request:
-
-{
-  "prompt": "Lion animal sound"
-}
-
-The backend securely communicates with ElevenLabs using the ELEVENLABS_API_KEY environment variable.
-
-The ElevenLabs API key must never be placed in the React frontend or committed to GitHub.
-
-🔐 Authentication
-
-The application provides:
-
-User registration
-
-User login
-
-JWT authentication
-
-Forgot password
-
-Password reset
-
-Protected user features
-
-Quiz score tracking
-
-Leaderboard
-
-The frontend automatically attaches the JWT token to authenticated API requests through an Axios interceptor.
-
-🐾 Animal System
-
-Users can browse animals by category and view individual animal profiles.
-
-Get all animals
-
-GET /api/animals
-
-Get animals by category
-
-GET /api/animals?category=MAMMAL
-
-Get animal by ID
-
-GET /api/animals/:id
-
-Animal information can include:
-
-Name
-
-Scientific name
-
-Description
-
-Image
-
-Category
-
-Habitat
-
-Diet
-
-Size
-
-Lifespan
-
-Region
-
-Conservation status
-
-Primary threats
-
-The backend also includes a static animal dataset that can act as a fallback when the database is unavailable or contains no matching animals.
-
-📡 API Endpoints
-
-Health
-
+### Health
+```http
 GET /api/health
+```
 
-Response:
-
-{
-  "status": "ok"
-}
-
-Animals
-
+### Animals
+```http
 GET /api/animals
-GET /api/animals/:id
+GET /api/animals/{id}
+```
 
-Authentication
-
+### Authentication
+```http
 POST /api/auth/register
 POST /api/auth/login
 POST /api/auth/forgot-password
 POST /api/auth/reset-password
+```
 
-Quiz
-
+### Quiz
+```http
 GET /api/quiz
 GET /api/quiz/generate-gemini
 POST /api/quiz/generate-gemini
+```
 
-User
-
+### User
+```http
 POST /api/user/quiz-score
 GET /api/user/leaderboard
+```
 
-Sound
-
+### Sound
+```http
 POST /api/sound
+```
 
-🔑 Environment Variables
+### Example: Generate AI Quiz
 
-Backend (.env)
+```http
+GET /api/quiz/generate-gemini?animal=Lion&category=MAMMAL
+```
 
-PORT=5001
-SECRET_KEY=your_django_secret_key
-DEBUG=True
-JWT_SECRET=your_jwt_secret
-EMAIL=your_email@gmail.com
-EMAIL_PASS=your_email_app_password
-GEMINI_API_KEY=your_gemini_api_key
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-FRONTEND_URL=http://localhost:5173
+Each generated question includes:
+- Question
+- Four options
+- Correct answer
+- Explanation
 
-Frontend (.env)
+### Example: Generate Animal Sound
 
-VITE_API_URL=http://localhost:5001
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```http
+POST /api/sound
+Content-Type: application/json
+```
 
-Security
-
-Never commit actual .env files or credentials to GitHub.
-
-Never expose:
-
-Django secret keys
-
-JWT secrets
-
-Gemini API keys
-
-ElevenLabs API keys
-
-Email app passwords
-
-OAuth credentials
-
-Use .env.example files to document required variables without exposing their values.
-
-🌐 Production Deployment
-
-Frontend — Vercel
-
-Deploy the frontend directory to Vercel.
-
-Add these production environment variables:
-
-VITE_API_URL=https://virtual-zoo-backend-8xmc.onrender.com
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-
-After changing VITE_* environment variables, redeploy the frontend so the values are included in the Vite production build.
-
-Backend — Render / Railway / PythonAnywhere
-
-Deploy the backend directory as a Python Web Service.
-
-Build command:
-
-pip install -r requirements.txt && python manage.py migrate
-
-Start command:
-
-python manage.py runserver 0.0.0.0:$PORT
-
-Add these environment variables:
-
-PORT=5001
-SECRET_KEY=your_production_django_secret_key
-DEBUG=False
-JWT_SECRET=your_jwt_secret
-EMAIL=your_email@gmail.com
-EMAIL_PASS=your_email_password
-GEMINI_API_KEY=your_gemini_api_key
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-FRONTEND_URL=https://virtual-zoo-view.vercel.app
-
-The Django backend handles animal data, authentication, user stats, Gemini quizzes, and ElevenLabs sound generation.
-
-🗄️ Database (SQLite & Django ORM)
-
-The application uses SQLite (`db.sqlite3`) managed through the Django ORM.
-
-Database migrations and initial data seeding:
-
-python manage.py migrate
-python manage.py seed_animals
-
-All 126 animal profiles are loaded from `animals_data.json` into the SQLite database.
-
-🔒 CORS
-
-The backend supports local development origins and the production frontend configured through:
-
-FRONTEND_URL=https://virtual-zoo-view.vercel.app
-
-This keeps the production frontend URL configurable through environment variables.
-
-🩺 Health Check
-
-After deploying the backend to Render, test:
-
-https://virtual-zoo-backend-8xmc.onrender.com/api/health
-
-Expected response:
-
+```json
 {
-  "status": "ok"
+  "prompt": "Lion animal sound"
 }
+```
 
-🧪 Local Development
+## 🗄️ Database
 
-Run the two applications separately.
+The application uses SQLite with Django ORM.
 
-Terminal 1 — Backend (Django)
+Database migrations:
 
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+The project includes `animals_data.json` and a Django management command to load the animal dataset.
+
+The project report describes 126 animal profiles across six categories.
+
+## 🔐 Security Practices
+
+- Environment variables for sensitive credentials.
+- JWT-based authentication.
+- Password hashing using bcrypt.
+- CORS configuration.
+- Backend-only API keys.
+- `.env` files excluded from Git.
+- Protected API requests using JWT authentication.
+
+**Important:** Never expose Django secret keys, JWT secrets, Gemini API keys, ElevenLabs API keys, or email credentials in frontend code or public repositories.
+
+## 🧪 Testing
+
+Run backend tests:
+
+```bash
 cd backend
-.\venv\Scripts\Activate.ps1
-python manage.py runserver 5001
 
-Terminal 2 — Frontend
+python manage.py test
+```
 
-cd frontend
-npm install
-npm run dev
+Recommended manual testing:
 
-Local architecture:
+1. Select a quiz category.
+2. Choose an animal.
+3. Generate and answer all ten questions.
+4. Submit the quiz.
+5. Verify the score on the dashboard and leaderboard.
+6. Search for zoos on the Virtual Tour page.
+7. Open and test the 360-degree tour functionality.
 
-React Frontend
-      │
-      ▼
-Django Backend :5001
-      │
-      ├── SQLite (db.sqlite3)
-      ├── Gemini API
-      └── ElevenLabs API
+## 🔮 Future Improvements
 
-🌍 Production Architecture
+- Migrate SQLite to PostgreSQL.
+- Add quiz history and advanced analytics.
+- Add difficulty levels and quiz timers.
+- Create a dedicated Django API and admin panel for zoo tours.
+- Add more zoos and wildlife parks.
+- Introduce multilingual support.
+- Expand automated testing and CI/CD integration.
 
-                    ┌─────────────────────┐
-                    │   Vercel Frontend   │
-                    │      React + Vite   │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │   Render Backend    │
-                    │    Python + Django   │
-                    └──────────┬──────────┘
-                               │
-             ┌─────────────────┼─────────────────┐
-             │                 │                 │
-             ▼                 ▼                 ▼
-       SQLite DB         Gemini API       ElevenLabs
-
-📱 Responsive Design
-
-The application is designed to work across:
-
-Desktop
-
-Laptop
-
-Tablet
-
-Mobile devices
-
-🛡️ Security Practices
-
-The project uses:
-
-Environment variables for sensitive credentials
-
-JWT-based authentication
-
-Password hashing
-
-CORS configuration
-
-Backend-only API keys
-
-.env files excluded from Git
-
-Production API URLs configured through environment variables
-
-📌 Important Notes
-
-Gemini API keys must remain on the backend.
-
-ElevenLabs API keys must remain on the backend.
-
-Django secret key and API credentials must remain in environment variables.
-
-Frontend VITE_* variables are exposed to the browser, so private API keys must never be placed in them.
-
-After changing Vercel environment variables, redeploy the frontend.
-
-After changing Render environment variables, redeploy the backend.
-
-📄 License
+## 📄 License
 
 This project is developed for educational and development purposes.
 
-👨‍💻 Author
+## 👨‍💻 Author
 
-Adesh Sonawane
+**Adesh Sonawane**
 
-GitHub: https://github.com/adeshsonawane46
+GitHub: [adeshsonawane46](https://github.com/adeshsonawane46)
+
+## 🔗 Project Repository
+
+[Virtual Zoo – Django GitHub Repository](https://github.com/adeshsonawane46/Virtual-Zoo-Django.git)
