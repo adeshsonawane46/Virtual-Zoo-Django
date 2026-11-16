@@ -32,7 +32,7 @@ An interactive full-stack Virtual Zoo web application where users can explore an
 
 📱 Responsive user interface
 
-🗄️ MongoDB database integration
+🗄️ SQLite database with Django ORM
 
 🔄 Dynamic fallback quiz generation when Gemini is unavailable
 
@@ -52,25 +52,19 @@ Tailwind CSS
 
 Backend
 
-Node.js
+Python 3.12
 
-Express.js
+Django 5.1
 
-MongoDB
+Django REST Framework
 
-Mongoose
+Django CORS Headers
 
-JSON Web Token (JWT)
+PyJWT (JWT Authentication)
 
-bcryptjs
+bcrypt
 
-Nodemailer
-
-Axios
-
-CORS
-
-Cookie Parser
+SQLite / Django ORM
 
 APIs & Services
 
@@ -78,39 +72,31 @@ Google Gemini API — AI quiz generation
 
 ElevenLabs API — animal sound generation
 
-MongoDB Atlas — database
-
-Deployment
-
-Vercel — Frontend
-
-Render — Backend
-
-MongoDB Atlas — Database
-
 📁 Project Structure
 
 Virtual-Zoo/
 │
 ├── backend/
-│   ├── data/
-│   │   └── allAnimals.js
-│   ├── middleware/
-│   ├── models/
-│   │   ├── Animal.js
-│   │   └── QuizQuestion.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   └── user.js
-│   ├── services/
-│   │   └── geminiService.js
-│   ├── server/
-│   │   └── api/
-│   │       └── sound.js
-│   ├── index.js
-│   ├── seed.js
-│   ├── package.json
-│   └── .env.example
+│   ├── api/
+│   │   ├── migrations/
+│   │   ├── management/commands/seed_animals.py
+│   │   ├── models.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   ├── auth_utils.py
+│   │   ├── gemini_service.py
+│   │   ├── sound_service.py
+│   │   └── tests.py
+│   ├── zoo_project/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   ├── wsgi.py
+│   │   └── asgi.py
+│   ├── venv/
+│   ├── animals_data.json
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── .env
 │
 ├── frontend/
 │   ├── public/
@@ -120,11 +106,11 @@ Virtual-Zoo/
 │   │   ├── utils/
 │   │   └── ...
 │   ├── package.json
-│   └── .env.example
+│   └── .env
 │
 └── README.md
 
-The sound API is part of the main backend. It is not a separate backend service.
+The sound API and Gemini AI quiz generation are integrated into the Django backend API.
 
 🚀 Getting Started
 
@@ -133,35 +119,41 @@ The sound API is part of the main backend. It is not a separate backend service.
 git clone https://github.com/adeshsonawane46/virtual-zoo.git
 cd virtual-zoo
 
-⚙️ Backend Setup
+⚙️ Backend Setup (Django + venv)
 
 cd backend
-npm install
 
-Create a .env file:
+# Create virtual environment (if not already created)
+python -m venv venv
 
-PORT=5001
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-EMAIL=your_email
-EMAIL_PASS=your_email_password
-GEMINI_API_KEY=your_gemini_api_key
-ELEVENLABS_API_KEY=your_elevenlabs_api_key
-FRONTEND_URL=http://localhost:5173
+# Activate virtual environment
+# Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# Windows (Command Prompt):
+venv\Scripts\activate.bat
+# Linux/macOS:
+source venv/bin/activate
 
-Start the backend:
+# Install dependencies
+pip install -r requirements.txt
 
-npm start
+# Run migrations
+python manage.py migrate
+
+# Seed animals dataset (126 animals)
+python manage.py seed_animals
+
+# Start Django development server on port 5001
+python manage.py runserver 5001
 
 Backend:
-
 http://localhost:5001
 
-Seed Database
-
-If database seeding is required:
-
-npm run seed
+> Alternatively, to run directly from the project root:
+> ```powershell
+> .\venv\Scripts\Activate.ps1
+> python backend\manage.py runserver 5001
+> ```
 
 🎨 Frontend Setup
 
@@ -207,7 +199,7 @@ If the Gemini API is unavailable, the backend uses a dynamic fallback quiz gener
 
 Animal sounds are generated using the ElevenLabs Sound Effects API.
 
-The sound route is part of the main Express backend:
+The sound route is part of the main Django backend:
 
 POST /api/sound
 
@@ -328,21 +320,22 @@ POST /api/sound
 
 🔑 Environment Variables
 
-Backend
+Backend (.env)
 
 PORT=5001
-MONGO_URI=
-JWT_SECRET=
-EMAIL=
-EMAIL_PASS=
-GEMINI_API_KEY=
-ELEVENLABS_API_KEY=
-FRONTEND_URL=
+SECRET_KEY=your_django_secret_key
+DEBUG=True
+JWT_SECRET=your_jwt_secret
+EMAIL=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
+GEMINI_API_KEY=your_gemini_api_key
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
+FRONTEND_URL=http://localhost:5173
 
-Frontend
+Frontend (.env)
 
-VITE_API_URL=
-VITE_GOOGLE_CLIENT_ID=
+VITE_API_URL=http://localhost:5001
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 
 Security
 
@@ -350,7 +343,7 @@ Never commit actual .env files or credentials to GitHub.
 
 Never expose:
 
-MongoDB credentials
+Django secret keys
 
 JWT secrets
 
@@ -358,7 +351,7 @@ Gemini API keys
 
 ElevenLabs API keys
 
-Email passwords
+Email app passwords
 
 OAuth credentials
 
@@ -377,46 +370,42 @@ VITE_GOOGLE_CLIENT_ID=your_google_client_id
 
 After changing VITE_* environment variables, redeploy the frontend so the values are included in the Vite production build.
 
-Backend — Render
+Backend — Render / Railway / PythonAnywhere
 
-Deploy the backend directory as a Render Web Service.
+Deploy the backend directory as a Python Web Service.
 
 Build command:
 
-npm install
+pip install -r requirements.txt && python manage.py migrate
 
 Start command:
 
-npm start
+python manage.py runserver 0.0.0.0:$PORT
 
-Add these environment variables in Render:
+Add these environment variables:
 
 PORT=5001
-MONGO_URI=your_mongodb_connection_string
+SECRET_KEY=your_production_django_secret_key
+DEBUG=False
 JWT_SECRET=your_jwt_secret
-EMAIL=your_email
+EMAIL=your_email@gmail.com
 EMAIL_PASS=your_email_password
 GEMINI_API_KEY=your_gemini_api_key
 ELEVENLABS_API_KEY=your_elevenlabs_api_key
 FRONTEND_URL=https://virtual-zoo-view.vercel.app
 
-The same Render backend handles animal data, authentication, user functionality, Gemini quizzes, and ElevenLabs sound generation.
+The Django backend handles animal data, authentication, user stats, Gemini quizzes, and ElevenLabs sound generation.
 
-🗄️ MongoDB Atlas
+🗄️ Database (SQLite & Django ORM)
 
-MongoDB Atlas is used as the application's database.
+The application uses SQLite (`db.sqlite3`) managed through the Django ORM.
 
-The connection string is stored in:
+Database migrations and initial data seeding:
 
-MONGO_URI=your_mongodb_connection_string
+python manage.py migrate
+python manage.py seed_animals
 
-Multiple projects can use separate databases within the same MongoDB Atlas cluster by specifying the database name in the connection string.
-
-Example:
-
-mongodb+srv://username:password@cluster.mongodb.net/virtual-zoo
-
-MongoDB credentials must never be committed to GitHub.
+All 126 animal profiles are loaded from `animals_data.json` into the SQLite database.
 
 🔒 CORS
 
@@ -442,11 +431,11 @@ Expected response:
 
 Run the two applications separately.
 
-Terminal 1 — Backend
+Terminal 1 — Backend (Django)
 
 cd backend
-npm install
-npm start
+.\venv\Scripts\Activate.ps1
+python manage.py runserver 5001
 
 Terminal 2 — Frontend
 
@@ -459,9 +448,9 @@ Local architecture:
 React Frontend
       │
       ▼
-Main Backend :5001
+Django Backend :5001
       │
-      ├── MongoDB Atlas
+      ├── SQLite (db.sqlite3)
       ├── Gemini API
       └── ElevenLabs API
 
@@ -475,13 +464,13 @@ Main Backend :5001
                                ▼
                     ┌─────────────────────┐
                     │   Render Backend    │
-                    │    Node + Express   │
+                    │    Python + Django   │
                     └──────────┬──────────┘
                                │
              ┌─────────────────┼─────────────────┐
              │                 │                 │
              ▼                 ▼                 ▼
-       MongoDB Atlas       Gemini API       ElevenLabs
+       SQLite DB         Gemini API       ElevenLabs
 
 📱 Responsive Design
 
@@ -519,7 +508,7 @@ Gemini API keys must remain on the backend.
 
 ElevenLabs API keys must remain on the backend.
 
-MongoDB credentials must remain in environment variables.
+Django secret key and API credentials must remain in environment variables.
 
 Frontend VITE_* variables are exposed to the browser, so private API keys must never be placed in them.
 
